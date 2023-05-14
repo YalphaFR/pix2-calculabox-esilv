@@ -1,30 +1,32 @@
 #include <map>
 using std::map;
 
-System sys = null;
+System sys;
 
 void setup() {
   // put your setup code here, to run once:
-  sys = new System().initialization();
+  sys = new System();
+  sys.initialisation();
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  const Game partie = new Game();
-  partie.menu();
-  partie.play();
+  Jeu partie = Jeu(sys);
+  partie.choisirNiveau();
+  partie.jouer();
 }
 
 // Classes
 
 class System {
   public:
-    const map<string, Capteur> capteurs;
-    const map<string, Moteur> moteurs;
-    const map<string, Ecran> ecrans;
-    const map<string, Led> leds;
+    map<String, Capteur> capteurs;
+    map<String, Moteur> moteurs;
+    map<String, Ecran> ecrans;
+    map<String, Led> leds;
 
-    void initialization() {
+    void initialisation() {
+      
       capteurs["gauche"] = new Capteur();
       capteurs["milieu"] = new Capteur();
       capteurs["droit"] = new Capteur();
@@ -42,37 +44,90 @@ class System {
       leds["multiplication"] = new Led();
       leds["division"] = new Led();
     } 
-}
 
-class Game {
+    void afficherSurTousLesEcrans(String str) {
+      for (auto const& [key, val] : ecrans)
+        {
+            val.afficher(str);
+        }
+    }
+};
+
+class Jeu {
   public:
-    const int levels[4] = {1, 2, 3, 4};
-    int level = null;
+    int niveau = 1;
     int tentativeMaximum = 2;
     int tentativesRestante = tentativeMaximum;
-    
+    System sys;
 
-    Game(int level) {
-      this->level = level;
+    Jeu(System sys) {
+      this->sys = sys;
     }
 
-    void menu() {
+    void choisirNiveau() {
+      // tant que l'écran du milieu ne detecte rien
       while () {
-        System.ecrans["ecranGauche"].afficher("-");
-        System.ecrans["ecranMilieu"].afficher(String(level));
-        System.ecrans["ecranDroit"].afficher("+");
+        sys.ecrans["ecranGauche"].afficher("-");
+        sys.ecrans["ecranMilieu"].afficher(String(level));
+        sys.ecrans["ecranDroit"].afficher("+");
 
         // Traiter les différents cas pour les capteurs
       }
     }
+    
+    void genererPropositions() {
 
-    void play() {
-      System.ecrans["ecranMilieu"].afficher("La partie va commencer !");
-      while () {
+    }
 
+    void jouer() {
+      sys.afficherSurTousLesEcrans("La partie va commencer !");
+      while (niveau < 4) {
+        // afficher les consignes sur quel écran ?
+
+
+        
+        String str = "";
+        int v1 = random(0, 11);
+        int v2 = random(0, 11);
+        int operation = random(1, 5);
+        int res = NULL;
+
+        switch (operation) {
+          case 1:
+            str = String(v1) + "+" + String(v2) + "= ";
+            res = v1+v2;
+            break;
+
+          case 2:
+            str = String(v1) + "-" + String(v2) + "= ";
+            res = v1-v2;
+            break;
+
+          case 3:
+            str = String(v1) + "*" + String(v2) + "= ";
+            res = v1*v2;
+            break;
+
+          case 4:
+            str = String(v1) + "/" + String(v2) + "= ";
+            res = v1/v2;
+            break;
+        }
+      }
+      sys.afficherSurTousLesEcrans("Félicitations, vous avez achevé tous les niveaux !");
+    }
+
+    void modifierNiveau(int niveau) {
+      if (1 <= niveau && niveau <= 4) {
+        this->niveau = niveau;
       }
     }
-    
+
+    void modifierTentative(int tentative) {
+      if (0 <= tentative && tentative <= tentativeMaximum) {
+        this->tentativesRestante = tentative;
+      }
+    } 
 }
 
 class Capteur {
@@ -84,6 +139,11 @@ class Capteur {
 
 class Moteur {
   public:
+
+    Moteur() {
+
+    }
+
     void demarrer() {
 
     }
@@ -91,6 +151,11 @@ class Moteur {
 
 class Ecran {
   public:
+
+    Ecran() {
+
+    }
+
     void afficher() {
       
     }
@@ -98,5 +163,15 @@ class Ecran {
 
 class Led() {
   public:
+    Led() {
 
+    }
+
+    void allumer() {
+
+    }
+
+    void eteindre() {
+
+    }
 }
