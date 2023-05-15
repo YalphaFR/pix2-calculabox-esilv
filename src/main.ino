@@ -1,4 +1,7 @@
 #include <map>
+#include <Servo.h> // Moteur
+#include <OLED_I2C.h> // Ecran
+
 using std::map;
 
 System sys;
@@ -128,26 +131,32 @@ class Jeu {
         this->tentativesRestante = tentative;
       }
     } 
-}
+};
 
 class Capteur {
   public:
     Capteur() {
 
     }
-}
+};
 
 class Moteur {
   public:
-
-    Moteur() {
-
+  int pin;
+  Servo servoMoteur;
+    Moteur(int pin) {
+      this->pin = pin;
+      configurer();
     }
 
-    void demarrer() {
-
+    void configurer() {
+      servoMoteur.attach(pin);
     }
-}
+
+    void tourner(int angle) {
+      servoMoteur.write(angle);
+    }
+};
 
 class Ecran {
   public:
@@ -159,19 +168,26 @@ class Ecran {
     void afficher() {
       
     }
-}
+};
 
-class Led() {
+class Led {
   public:
-    Led() {
+    int pin;
 
+    Led(int pin) {
+      this->pin = pin;
+      configurer();
     }
 
     void allumer() {
+      degitalWrite(pin, HIGHT); //le courant est envoyé sur la borne 1, la LED s'allume
+    }
 
+    void configurer() {
+      pinMode(pin, OUTPUT); //règle la borne numérique numéro 1 de la carte Arduino en mode sortie
     }
 
     void eteindre() {
 
     }
-}
+};
