@@ -71,7 +71,7 @@ class Jeu {
       // tant que le capteur du milieu ne detecte rien
       sys.ecrans["ecranGauche"].afficher("-");
       sys.ecrans["ecranDroit"].afficher("+");
-      
+
       while () {
         sys.ecrans["ecranMilieu"].afficher(String(level));
 
@@ -131,7 +131,7 @@ class Jeu {
           }
 
           if (res != proposition) {
-            tentativesRestante -= 1;
+            modifierTentative(tentativesRestante - 1);
           }
         }
 
