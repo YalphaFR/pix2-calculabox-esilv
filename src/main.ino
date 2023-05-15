@@ -68,7 +68,7 @@ class Jeu {
     }
 
     void choisirNiveau() {
-      // tant que l'écran du milieu ne detecte rien
+      // tant que le capteur du milieu ne detecte rien
       while () {
         sys.ecrans["ecranGauche"].afficher("-");
         sys.ecrans["ecranMilieu"].afficher(String(level));
@@ -84,38 +84,71 @@ class Jeu {
 
     void jouer() {
       sys.afficherSurTousLesEcrans("La partie va commencer !");
+      delay(4000);
+
       while (niveau < 4) {
-        // afficher les consignes sur quel écran ?
+        // éteindre toutes les leds
+        for (auto const& [key, val] : leds)
+        {
+            val.eteindre();
+        }
 
+        for (int i = 0; i < 2; i++) {
 
-        
-        String str = "";
-        int v1 = random(0, 11);
-        int v2 = random(0, 11);
-        int operation = random(1, 5);
-        int res = NULL;
+          // afficher les consignes sur quel écran ?
 
-        switch (operation) {
-          case 1:
-            str = String(v1) + "+" + String(v2) + "= ";
-            res = v1+v2;
-            break;
+          String str = "";
+          int v1 = random(0, 11);
+          int v2 = random(0, 11);
+          int operation = random(1, 5);
+          int res = NULL;
 
-          case 2:
-            str = String(v1) + "-" + String(v2) + "= ";
-            res = v1-v2;
-            break;
+          switch (operation) {
+            case 1:
+              sys.leds["addition"].allumer();
+              str = String(v1) + "+" + String(v2) + "= ";
+              res = v1+v2;
+              break;
 
-          case 3:
-            str = String(v1) + "*" + String(v2) + "= ";
-            res = v1*v2;
-            break;
+            case 2:
+              sys.leds["soustraction"].allumer();
+              str = String(v1) + "-" + String(v2) + "= ";
+              res = v1-v2;
+              break;
 
-          case 4:
-            str = String(v1) + "/" + String(v2) + "= ";
-            res = v1/v2;
+            case 3:
+              sys.leds["multiplication"].allumer();
+              str = String(v1) + "*" + String(v2) + "= ";
+              res = v1*v2;
+              break;
+
+            case 4:
+              sys.leds["division"].allumer();
+              str = String(v1) + "/" + String(v2) + "= ";
+              res = v1/v2;
+              break;
+          }
+
+          if (res != proposition) {
+            tentativesRestante -= 1;
+          }
+        }
+
+        switch (tentativesRestante) {
+          case 0:
+            modifierNiveau(niveau - 1);
             break;
         }
+        {
+        case 1:
+
+          break;
+        
+        case 2:
+        modifierNiveau(niveau + 1);
+          break;
+        }
+
       }
       sys.afficherSurTousLesEcrans("Félicitations, vous avez achevé tous les niveaux !");
     }
@@ -135,6 +168,7 @@ class Jeu {
 
 class Capteur {
   public:
+    int pin;
     Capteur() {
 
     }
@@ -142,32 +176,58 @@ class Capteur {
 
 class Moteur {
   public:
-  int pin;
-  Servo servoMoteur;
-    Moteur(int pin) {
-      this->pin = pin;
-      configurer();
-    }
+    int pin;
+    Servo servoMoteur;
+      Moteur(int pin) {
+        this->pin = pin;
+        configurer();
+      }
 
-    void configurer() {
-      servoMoteur.attach(pin);
-    }
+      void configurer() {
+        servoMoteur.attach(pin);
+      }
 
-    void tourner(int angle) {
-      servoMoteur.write(angle);
-    }
+      void tourner(int angle) {
+        servoMoteur.write(angle);
+      }
 };
 
 class Ecran {
   public:
+    int pin;
+    OLED myOLED(SDA, SCL, pin);
 
-    Ecran() {
+    Ecran(int pin) {
+      this->pin = pin;
 
+      configurer();
     }
 
-    void afficher() {
-      
+    void configurer() {
+      uint8_t BigNumbers[];
+      myOLED.begin();
+      myOLED.setFont(BigNumbers);
     }
+
+    void afficher(float f) {
+      myOLED.printNumF(f, RIGHT, 40);
+      myOLED.update();
+    }
+
+    void afficher(int inte) {
+      myOLED.printNumF(inte, RIGHT, 40);
+      myOLED.update();
+    }
+
+    void afficher(String str) {
+      myOLED.printNumF(str, RIGHT, 40);
+      myOLED.update();
+    }
+
+    void cleanScreen() {
+      myOLED.clrScr();
+    }
+
 };
 
 class Led {
@@ -188,6 +248,6 @@ class Led {
     }
 
     void eteindre() {
-
+      degitalWrite(pin, LOW);
     }
 };
