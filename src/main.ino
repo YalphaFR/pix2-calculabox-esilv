@@ -30,22 +30,22 @@ class System {
 
     void initialisation() {
       
-      capteurs["gauche"] = new Capteur();
-      capteurs["milieu"] = new Capteur();
-      capteurs["droit"] = new Capteur();
+      capteurs["gauche"] = Capteur();
+      capteurs["milieu"] = Capteur();
+      capteurs["droit"] = Capteur();
 
-      moteurs["gauche"] = new Moteur();
-      moteurs["milieu"] = new Moteur();
-      moteurs["droit"] = new Moteur();
+      moteurs["gauche"] = Moteur();
+      moteurs["milieu"] = Moteur();
+      moteurs["droit"] = Moteur();
 
-      ecrans["gauche"] = new Ecran();
-      ecrans["milieu"] = new Ecran();
-      ecrans["droit"] = new Ecran();
+      ecrans["gauche"] = Ecran();
+      ecrans["milieu"] = Ecran();
+      ecrans["droit"] = Ecran();
 
-      leds["addition"] = new Led();
-      leds["soustraction"] = new Led();
-      leds["multiplication"] = new Led();
-      leds["division"] = new Led();
+      leds["addition"] = Led();
+      leds["soustraction"] = Led();
+      leds["multiplication"] = Led();
+      leds["division"] = Led();
     } 
 
     void afficherSurTousLesEcrans(String str) {
@@ -69,10 +69,11 @@ class Jeu {
 
     void choisirNiveau() {
       // tant que le capteur du milieu ne detecte rien
+      sys.ecrans["ecranGauche"].afficher("-");
+      sys.ecrans["ecranDroit"].afficher("+");
+      
       while () {
-        sys.ecrans["ecranGauche"].afficher("-");
         sys.ecrans["ecranMilieu"].afficher(String(level));
-        sys.ecrans["ecranDroit"].afficher("+");
 
         // Traiter les différents cas pour les capteurs
       }
